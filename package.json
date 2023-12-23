@@ -1,0 +1,26 @@
+{
+  "name": "divar",
+  "version": "1.0.0",
+  "description": "A practical project based on Erfan Yousefi`s nodejs course",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reza-hadipour/Divar.git"
+  },
+  "keywords": [
+    "nodejs",
+    "api",
+    "swagger",
+    "mongodb",
+    "redis"
+  ],
+  "author": "Reza Hadipour",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reza-hadipour/Divar/issues"
+  },
+  "homepage": "https://github.com/reza-hadipour/Divar#readme"
+}
