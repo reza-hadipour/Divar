@@ -1,10 +1,11 @@
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
-const routes = require('./src/modules/app.routes');
+const routes = require('./src/app.routes');
 const notFoundHandler = require('./src/common/exception/notFound.handler');
 const allExceptionHandler = require('./src/common/exception/allException.handler');
 const cookieParser = require('cookie-parser');
-
+const ejs = require('ejs');
+const expressEjsLayouts = require('express-ejs-layouts');
 
 class Application{
 
@@ -12,7 +13,8 @@ class Application{
     constructor(){
         this.setupMongoDB();
         this.setupExpress();
-        this.setConfigs();
+        this.setConfigs(this.app);
+        this.setEJS(this.app);
         this.setRoutes(this.app);
         this.setupSwagger(this.app);
         this.setErrorHandlers(this.app)
@@ -37,7 +39,6 @@ class Application{
 
     setRoutes(app){
         app.use(routes)
-        
     }
 
     setErrorHandlers(app){
@@ -45,10 +46,17 @@ class Application{
         allExceptionHandler(app);
     }
 
-    setConfigs(){
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({extended: true}));
-        this.app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
+    setConfigs(app){
+        app.use(express.json());
+        app.use(express.urlencoded({extended: true}));
+        app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
+        app.use(express.static('public'))
+    }
+
+    setEJS(app){
+        app.use(expressEjsLayouts);
+        app.set('view engine','ejs')
+        app.set('layout','./layouts/panel/main.ejs')
     }
 }
 

@@ -6,7 +6,9 @@ const optionSchema = new Schema({
     type: {type: String, enum: ["number","string","array","boolean"]},
     enum: {type: Array, default:[]},
     guid: {type: String},
+    required : {type: Boolean, required: false, default: false},
     category: {type: Types.ObjectId, ref: "Category", required: true}
 })
 
-module.exports = model("Option", optionSchema);
+const OptionModel = model("Option", optionSchema);
+module.exports = { OptionModel }

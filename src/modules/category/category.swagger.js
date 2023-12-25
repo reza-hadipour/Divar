@@ -54,4 +54,17 @@
  *          200:
  *              description:    List of categories
  * 
+ * /category/{id}:
+ *  delete:
+ *      summary: Delete new category
+ *      tags:
+ *          -   Category
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              type: string
+ *      responses:
+ *          200:
+ *              description:    Delete the category successfully
+ * 
  */

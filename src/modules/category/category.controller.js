@@ -23,6 +23,19 @@ class CategoryController{
         }
     }
 
+    async removeCategory(req,res,next){
+        try {
+            const {id} = req.params;
+            let result = await this.#service.removeCategory(id);
+            return res.status(HttpCodes.OK).json({
+                message: CategoryMessage.deleteCategorySuccessfully,
+                result
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getAllCategories(req,res,next){
         try {
             const categories = await this.#service.findCategories();

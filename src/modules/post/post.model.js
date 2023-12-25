@@ -14,4 +14,8 @@ const postSchema = new Schema({
     option: {type: Object, default:{}}
 },{timestamps: true});
 
-module.exports = model("Post",postSchema);
+const PostModel = model("Post",postSchema);
+
+module.exports = {
+    PostModel
+}

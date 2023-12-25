@@ -26,6 +26,32 @@
  *                  type: string
  *              guid:
  *                  type: string
+ *              required:
+ *                  type: boolean
+ *              type:
+ *                  type: string
+ *                  enum:
+ *                      -   number
+ *                      -   string
+ *                      -   boolean
+ *                      -   array
+ *              enum:
+ *                  type: array
+ *                  items:
+ *                      type: string
+ *      UpdateOption:
+ *          type: object
+ *          properties:
+ *              title:
+ *                  type: string
+ *              key:
+ *                  type: string
+ *              category:
+ *                  type: string
+ *              guid:
+ *                  type: string
+ *              required:
+ *                  type: boolean
  *              type:
  *                  type: string
  *                  enum:
@@ -38,7 +64,6 @@
  *                  items:
  *                      type: string
  */
-
 
 /**
  * @swagger
@@ -85,6 +110,38 @@
  *          200:
  *              description: successfully
  * 
+ *  put:
+ *      summary: update option by id
+ *      tags:
+ *          -   Option
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              type: string
+ *      requestBody:
+ *          content:
+ *              application/x-www-form-urlencoded:
+ *                  schema:
+ *                      $ref: "#components/schemas/UpdateOption"
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#components/schemas/UpdateOption"
+ *      responses:
+ *          200:
+ *              description: successfully
+ * 
+ *  delete:
+ *      summary: delete option by id
+ *      tags:
+ *          -   Option
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              type: string
+ *      responses:
+ *          200:
+ *              description: deleted successfully
+ * 
  * /option/by-category/{categoryId}:
  *  get:
  *      summary: get all options of a category
@@ -97,5 +154,17 @@
  *      responses:
  *          200:
  *              description:    successfully
+ * 
+ * /option/by-category-slug/{slug}:
+ *  get:
+ *      summary: get all options of a category by slug
+ *      tags:
+ *          -   Option
+ *      parameters:
+ *          -   in: path
+ *              name: slug
+ *              type: string
+ *      responses:
+ *          200:
+ *              description:    successfully
  */
-

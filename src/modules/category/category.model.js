@@ -4,7 +4,7 @@ const categorySchema = new Schema({
     name: {type: String, required: true},
     slug: {type: String, required: true, index: true},
     icon: {type: String, required: true},
-    parent: {type: Types.ObjectId, required: false, default: null},
+    parent: {type: Types.ObjectId,ref:"Category", required: false, default: null},
     parents: {type: [Types.ObjectId], required: false, default: null}
 },{toJSON:{virtuals: true, versionKey: false, id: false}})
 
@@ -21,4 +21,5 @@ function autoPopulate(next){
 
 categorySchema.pre("find", autoPopulate).pre("findOne",autoPopulate);
 
-module.exports = model("Category", categorySchema);
+const CategoryModel = model("Category", categorySchema);
+module.exports = { CategoryModel }
