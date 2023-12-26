@@ -6,19 +6,71 @@
         </div>
         <% } %>
         <div class="p-3">
-            <% if(categories && categories.length > 0){ %>
-                <ul>
-                    <% categories.forEach(category => { %>
-                        <li>
-                            <a href="?slug=<%= category.slug %>"
-                            class="w-100 p-3 d-block bg-light text-dark">
-                            <span class="ti ti-<%= category.icon %> nav-small-cap-icon fs-4"></span>
-                            <span><%= category.name %></span>
-                            </a>
-                        </li>
+            <% if(options.length == 0) { %>
+                <% if(categories && categories.length > 0){ %>
+                    <ul>
+                        <% categories.forEach(category => { %>
+                            <li>
+                                <a href="?slug=<%= category.slug %>"
+                                class="w-100 p-3 d-block bg-light text-dark">
+                                <span class="ti ti-<%= category.icon %> nav-small-cap-icon fs-4"></span>
+                                <span><%= category.name %></span>
+                                </a>
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } %>
+            <% } else { %>
+                <form action="/post/create" method="post" enctype="multipart/form-data; charset=utf-8">
+                    <input type="hidden" name="lat" id="lat">
+                    <input type="hidden" name="lng" id="lng">
+                    <input type="hidden" name="category" id="category" value="<%= categoryId %>">
+                  <div class="p-2">
+                    <label>انتخاب آدرس</label>
+                    <div id="map-element" class="w-100" style="height: 300px"></div>
+                  </div>
+                  <div class="p-2">
+                    <label>تصاویر آگهی</label>
+                    <input type="file" name="images" multiple class="form-control" />
+                  </div>
+                  <div class="p-2">
+                    <label>عنوان آگهی</label>
+                    <input
+                      type="text"
+                      name="title_post"
+                      placeholder="عنوان آگهی"
+                      class="form-control" />
+                  </div>
+                  <div class="p-2">
+                    <label>توضیحات آگهی</label>
+                    <textarea class="form-control" name="description" placeholder="توضیحات آگهی"></textarea>
+                  </div>
+                  <div class="p-2">
+                    <label>مبلغ با قیمت آگهی جهت نمایش</label>
+                    <input
+                      type="text"
+                      name="amount"
+                      placeholder="مبلغ"
+                      class="form-control" />
+                  </div>
+
+                    <% options.forEach(option => { %>
+                        <div class="p-2">
+                        <label><%= (option.required)? option.title + " *" : option.title %></label>
+                        <% if(option.type === "array"){%>
+                            <select name="<%=option.title%>" class="form-select">
+                                <% option.enum.forEach(item => { %>
+                                    <option value="<%= item %>"><%= item %></option>
+                                <% }) %>
+                            </select>
+                        <% } else { %>
+                            <input type="text", name="<%=option.title%>" class="form-control" placeholder="<%= option.guid %>">
+                            <% } %>
+                        </div>
                     <% }); %>
-                </ul>
-            <% } %>
+                    <button type="submit" class="btn btn-danger">انتشار آگهی</button>
+                        </form>
+                <% } %>
         </div>
     </div>
 </div>

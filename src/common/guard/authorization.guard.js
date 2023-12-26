@@ -1,5 +1,5 @@
 const createHttpError = require("http-errors");
-const AuthorizationMessage = require("../messages/auth.message");
+const AuthorizationMessage = require("./authorization.message");
 const jwt = require('jsonwebtoken');
 const userModel = require("../../modules/user/user.model");
 const CookieEnum = require("../constant/cookie.enum");

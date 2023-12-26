@@ -12,6 +12,15 @@ class PostService{
         this.#optionModel = OptionModel
     }
 
+    async getCategoryOptions(categoryId){
+        const options = await this.#optionModel.find({category:categoryId});
+        return options; 
+    }
+
+    async create(dto){
+        return await this.#model.create(dto);
+    }
+
 }
 
 

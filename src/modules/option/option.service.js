@@ -1,5 +1,5 @@
 const autoBind = require("auto-bind");
-const optionModel = require("./option.model");
+const {OptionModel} = require("./option.model");
 const { isValidObjectId, Types } = require("mongoose");
 const createHttpError = require("http-errors");
 const OptionMessage = require("./option.message");
@@ -12,7 +12,7 @@ class OptionService{
     #categoryService;
     constructor(){
         autoBind(this);
-        this.#model = optionModel
+        this.#model = OptionModel
         this.#categoryService = categoryService
     }
 

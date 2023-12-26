@@ -3,6 +3,11 @@ const postService = require("./post.service");
 const { PostMessage } = require('./post.message');
 const { CategoryModel } = require('../category/category.model');
 const createHttpError = require("http-errors");
+const {Types} = require('mongoose');
+const { default: axios } = require("axios");
+const { getAddressDetail } = require("../../common/utils/http");
+const { removePropertyInObject } = require("../../common/utils/functions");
+
 
 class PostController {
     #service;
@@ -20,6 +25,8 @@ class PostController {
 
             let showBack = false;
             let parentSlug = "root";
+            let options = [];
+            let categoryId;
 
             if (slug && slug != "root") {
                 slug = slug.trim()
@@ -38,7 +45,6 @@ class PostController {
                 ])
 
                 if (!category.length) throw new createHttpError.NotFound(PostMessage.notFound)
-                console.log(category);
 
                 match = {
                     parent: category[0]._id
@@ -52,6 +58,12 @@ class PostController {
                 }else{
                     parentSlug = "root"
                 }
+
+                if(parentSlug != "root"){
+                    options = await this.#service.getCategoryOptions(category[0]._id)
+                    categoryId = (category[0]._id).toString();
+                }
+
             }
 
             // Get all categories
@@ -60,14 +72,53 @@ class PostController {
                     $match: match
                 }
             ])
-            // console.log(categories);
+            //  console.log(categories);
 
             res.render("./pages/panel/create-post.ejs", {
                 categories,
                 showBack,
-                parentSlug
+                parentSlug,
+                options,
+                categoryId
             })
 
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async create(req,res,next){
+        try {
+            // console.log(req.body);
+            const {title_post: title, description: content, category, lat, lng, amount} = req.body;
+            const {address, province, city, district} = await getAddressDetail(lat,lng);
+
+            // delete req.body['title_post'];
+            // delete req.body['description'];
+            // delete req.body['category'];
+            // delete req.body['lat'];
+            // delete req.body['lng'];
+            // delete req.body['amount'];
+            // delete req.body['images'];
+
+            const options = await removePropertyInObject(req.body, ['title_post','description','category','lat','lng','amount','images']);  //req.body; // JSON.parse(JSON.stringify(req.body));
+            // console.log(options);
+
+            this.#service.create({
+                title,
+                content,
+                coordinate: [lat,lng],
+                amount,
+                category: new Types.ObjectId(category),
+                images: [],
+                address,
+                province,
+                city,
+                district,
+                options
+            });
+            return res.json(options)
+            return res.json('Advertisement is published')
         } catch (error) {
             next(error)
         }

@@ -1,6 +1,6 @@
 const autoBind = require("auto-bind");
-const categoryModel = require("./category.model");
-const optionModel = require("../option/option.model");
+const {CategoryModel} = require("./category.model");
+const {OptionModel} = require("../option/option.model");
 const { isValidObjectId, Types } = require("mongoose");
 const createHttpError = require("http-errors");
 const CategoryMessage = require("./category.message");
@@ -11,8 +11,8 @@ class CategoryService{
     #optionModel;
     constructor(){
         autoBind(this);
-        this.#model = categoryModel;
-        this.#optionModel = optionModel;
+        this.#model = CategoryModel;
+        this.#optionModel = OptionModel;
     }
 
     async creteCategory(categoryDto){
