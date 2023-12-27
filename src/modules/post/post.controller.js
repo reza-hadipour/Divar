@@ -3,10 +3,11 @@ const postService = require("./post.service");
 const { PostMessage } = require('./post.message');
 const { CategoryModel } = require('../category/category.model');
 const createHttpError = require("http-errors");
-const {Types} = require('mongoose');
+const {Types, isValidObjectId} = require('mongoose');
 const { default: axios } = require("axios");
 const { getAddressDetail } = require("../../common/utils/http");
 const { removePropertyInObject } = require("../../common/utils/functions");
+const utf8 = require('utf8');
 
 
 class PostController {
@@ -90,8 +91,15 @@ class PostController {
     async create(req,res,next){
         try {
             // console.log(req.body);
+            // console.log(req?.files);
+            const user = req?.user?._id;
+            if (!isValidObjectId(user)) throw new createHttpError(PostMessage.invalidRequest);
+
+            const images = req?.files?.map(image => image?.path?.slice(7).replace(/\\/g,'/'));
+            
             const {title_post: title, description: content, category, lat, lng, amount} = req.body;
             const {address, province, city, district} = await getAddressDetail(lat,lng);
+            // const [address, province, city, district] = ["address","tehran","tehran","1"];
 
             // delete req.body['title_post'];
             // delete req.body['description'];
@@ -100,28 +108,48 @@ class PostController {
             // delete req.body['lng'];
             // delete req.body['amount'];
             // delete req.body['images'];
+            // console.log(req.body);
 
-            const options = await removePropertyInObject(req.body, ['title_post','description','category','lat','lng','amount','images']);  //req.body; // JSON.parse(JSON.stringify(req.body));
+            const options = removePropertyInObject(req.body, ['title_post','description','category','lat','lng','amount']);  //req.body; // JSON.parse(JSON.stringify(req.body));
+            // const options =  JSON.parse(JSON.stringify(req.body));
+            
+            for (let key in options) {
+                let value = options[key];
+                delete options[key];
+                key = utf8.decode(key);
+                options[key] = value;
+            }
             // console.log(options);
 
-            this.#service.create({
+            
+            await this.#service.create({
+                user,
                 title,
                 content,
                 coordinate: [lat,lng],
                 amount,
                 category: new Types.ObjectId(category),
-                images: [],
+                images,
                 address,
                 province,
                 city,
                 district,
                 options
             });
-            return res.json(options)
-            return res.json('Advertisement is published')
+            
+            return res.redirect('/post/my');
+
         } catch (error) {
             next(error)
         }
+    }
+
+    async findMyPost(req,res,next){
+        const user = req?.user?._id;
+        if (!isValidObjectId(user)) throw new createHttpError(PostMessage.invalidRequest);
+
+        let posts = await this.#service.findMyPosts(user);
+        res.render("./pages/panel/posts.ejs",{posts})
     }
 }
 

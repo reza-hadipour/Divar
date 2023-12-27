@@ -4,6 +4,7 @@ const PostMessage = Object.freeze({
     notFound: "Post not found",
     alreadyExist: "Post already exists",
     deletePostSuccessfully: "Post deleted successfully",
+    invalidRequest: "invalid post request"
 
 })
 

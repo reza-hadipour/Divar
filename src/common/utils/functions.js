@@ -4,7 +4,7 @@ const removePropertyInObject = (target= {}, properties = [])=>{
     for (const item of properties) {
         delete target[item]
     }
-    return target;
+    return JSON.parse(JSON.stringify(target));
 }
 
 module.exports = {

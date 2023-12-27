@@ -21,6 +21,16 @@ class PostService{
         return await this.#model.create(dto);
     }
 
+    async find(query = {}){
+        return this.#model.find(query);
+    }
+
+    async findMyPosts(user){
+        return this.#model.find({user});
+    }
+
+    
+
 }
 
 

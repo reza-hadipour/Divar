@@ -21,9 +21,10 @@
                     </ul>
                 <% } %>
             <% } else { %>
-                <form action="/post/create" method="post" enctype="multipart/form-data; charset=utf-8">
-                    <input type="hidden" name="lat" id="lat">
-                    <input type="hidden" name="lng" id="lng">
+                <!-- //charset=utf-8 -->
+                <form action="/post/create" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+                    <input type="hidden" name="lat" id="lat" value="35.679609609368605">
+                    <input type="hidden" name="lng" id="lng" value="51.38031005859376">
                     <input type="hidden" name="category" id="category" value="<%= categoryId %>">
                   <div class="p-2">
                     <label>انتخاب آدرس</label>
@@ -64,7 +65,7 @@
                                 <% }) %>
                             </select>
                         <% } else { %>
-                            <input type="text", name="<%=option.title%>" class="form-control" placeholder="<%= option.guid %>">
+                            <input contentType="charset=UTF-8" type="text", name="<%=option.title%>" class="form-control" placeholder="<%= option.guid %>">
                             <% } %>
                         </div>
                     <% }); %>

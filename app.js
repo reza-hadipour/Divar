@@ -6,6 +6,7 @@ const allExceptionHandler = require('./src/common/exception/allException.handler
 const cookieParser = require('cookie-parser');
 const ejs = require('ejs');
 const expressEjsLayouts = require('express-ejs-layouts');
+const moment = require('jalali-moment');
 
 class Application{
 
@@ -47,6 +48,7 @@ class Application{
     }
 
     setConfigs(app){
+
         app.use(express.json());
         app.use(express.urlencoded({extended: true}));
         app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
@@ -57,6 +59,7 @@ class Application{
         app.use(expressEjsLayouts);
         app.set('view engine','ejs')
         app.set('layout','./layouts/panel/main.ejs')
+        app.locals.moment = moment;
     }
 }
 
