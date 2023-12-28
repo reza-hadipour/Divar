@@ -1,6 +1,7 @@
 const { AuthRouter } = require('./modules/auth/auth.route');
 const { CategoryRouter } = require('./modules/category/category.route');
 const { OptionRouter } = require('./modules/option/option.route');
+const postController = require('./modules/post/post.controller');
 const { PostRouter }  = require('./modules/post/post.route');
 const { UserRouter } = require('./modules/user/user.route');
 
@@ -13,10 +14,7 @@ router.use('/category', CategoryRouter)
 router.use('/option', OptionRouter)
 router.use('/post', PostRouter)
 
-router.get('/', (req,res,next)=>{
-    res.locals.layout = "./layouts/website/main.ejs"
-    res.render("./pages/home/index.ejs");
-})
+router.get('/', postController.postList)
 
 router.get('/panel', (req,res,next)=>{
     res.render("./pages/panel/dashboard.ejs");

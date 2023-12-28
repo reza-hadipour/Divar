@@ -7,6 +7,10 @@ const cookieParser = require('cookie-parser');
 const ejs = require('ejs');
 const expressEjsLayouts = require('express-ejs-layouts');
 const moment = require('jalali-moment');
+const session = require('express-session');
+const flash = require('connect-flash');
+const connectMongo = require('connect-mongo');
+
 
 class Application{
 
@@ -48,10 +52,11 @@ class Application{
     }
 
     setConfigs(app){
-
         app.use(express.json());
         app.use(express.urlencoded({extended: true}));
         app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
+        app.use(this.#sessionOptions);
+        app.use(flash());
         app.use(express.static('public'))
     }
 
@@ -59,8 +64,18 @@ class Application{
         app.use(expressEjsLayouts);
         app.set('view engine','ejs')
         app.set('layout','./layouts/panel/main.ejs')
+        app.set('layout extractScripts', true)
+        app.set('layout extractStyles', true)
         app.locals.moment = moment;
     }
+
+    #sessionOptions = session({
+        secret: process.env.SESSION_SECRET_KEY,
+        store: connectMongo.create({mongoUrl: process.env.MONGODB_URL}),
+        resave: false,
+        saveUninitialized: false,
+        cookie: {maxAge: 1000 * 60 * 60 * 24, httpOnly: true}
+    })
 }
 
 module.exports = Application;

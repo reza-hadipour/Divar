@@ -137,6 +137,7 @@ class PostController {
                 options
             });
             
+            req.flash('success_message',PostMessage.createPostSuccessfully);
             return res.redirect('/post/my');
 
         } catch (error) {
@@ -149,8 +150,50 @@ class PostController {
         if (!isValidObjectId(user)) throw new createHttpError(PostMessage.invalidRequest);
 
         let posts = await this.#service.findMyPosts(user);
-        res.render("./pages/panel/posts.ejs",{posts})
+        let success_message = req.flash('success_message');
+
+        res.render("./pages/panel/posts.ejs",
+        {
+            posts,
+            success_message
+        })
     }
+
+    async remove(req,res,next){
+        try {
+            const {id} = req.params;
+            const result =  await this.#service.remove(id);
+            if(result.deletedCount == 1) req.flash('success_message', PostMessage.deletePostSuccessfully);
+            return res.redirect('/post/my');
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async showPost(req,res,next){
+        try {
+            const {id} = req.params;
+            const post = await this.#service.checkExist(id);
+
+            res.locals.layout = "./layouts/website/main.ejs";
+            return res.render("./pages/home/post.ejs",{post});
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async postList(req,res,next){
+        try {
+            let query = req?.query;
+            const posts = await this.#service.findAll(query);
+            res.locals.layout = "./layouts/website/main.ejs";
+            return res.render("./pages/home/index.ejs", {posts})
+        } catch (error) {
+            next(error)
+        }
+    }
+    
 }
 
 module.exports = new PostController();
