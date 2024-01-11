@@ -10,27 +10,128 @@ const moment = require('jalali-moment');
 const session = require('express-session');
 const flash = require('connect-flash');
 const connectMongo = require('connect-mongo');
+const cors = require('cors');
+
+// Apollo Server libraries
+const { ApolloServer: ApolloServerExpress } = require('apollo-server-express');
+
+const { ApolloServer } = require('@apollo/server');
+const { expressMiddleware } = require('@apollo/server/express4');
+const {startStandaloneServer} = require('@apollo/server/standalone');
+
+const {ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageDisabled} = require('apollo-server-core');
+
+// graphql-http libraries
+const { createHandler } = require('graphql-http/lib/use/express');
+const expressPlayground = require('graphql-playground-middleware-express').default;
+
+const { graphQlSchema } = require('./src/graphql/index.resolver');
+const app = express();
 
 
 class Application{
 
-    app;
     constructor(){
-        this.setupMongoDB();
         this.setupExpress();
-        this.setConfigs(this.app);
-        this.setEJS(this.app);
-        this.setRoutes(this.app);
-        this.setupSwagger(this.app);
-        this.setErrorHandlers(this.app)
+        this.setupMongoDB();
+        // this.setupGraphQlUsingGraphqlHTTP();
+        // this.setupGraphQlUsingApolloServerExpress();
+        // this.setupGraphQlUsingApolloServerStandalone();
+        this.setConfigs(app);
+        this.setEJS(app);
+        this.setRoutes(app);
+        // this.setupSwagger(app);  // Swagger makes the building slow
+
+        // Initialize GraphQl and Error handling in this way to prevent conflict of them
+        (async ()=>{
+            await this.setupGraphQlUsingApolloServer();
+            this.setErrorHandlers(app);  // setErrorHandlers must invoke after await server.start(), otherwise it makes problem in reach graphql route
+        })()
     }
 
-    setupExpress(){
-        this.app = express();
+    
+    async setupExpress(){
         const port = process.env.PORT || 3000;
-        this.app.listen(port, ()=>{
+
+        app.listen(port, async ()=>{
             console.log(`Server is running on port ${port}`, `http://localhost:${port}`);
         })
+    }
+
+    async setupGraphQlUsingApolloServer(){
+        // Method 4 using @apollo/server
+        // it has much in common with Apollo-server-express
+        const server = new ApolloServer({
+            schema: graphQlSchema
+        });
+
+        await server.start()
+        
+        app.use('/graphql', cors(), expressMiddleware(server));
+
+        // Specify the path where we'd like to mount our server
+        //highlight-start
+
+        // setErrorHandlers must invoke after await server.start(), otherwise it makes problem in reach graphql route
+        // this.setErrorHandlers(app)
+    }
+
+    async setupGraphQlUsingGraphqlHTTP(){
+        // Method 3 graphql-http - it provide basic graphql
+        // using graphql-playground-middleware-express for Graphql Playground
+        app.use(
+            '/graphql',
+            cors(),
+            createHandler({
+                schema: graphQlSchema,
+                context: ()=>{
+                    return {x : "Reza Magazine"}
+                }
+            })
+            )
+
+        // Set a playground route to send request through graphql route
+        app.get('/playground', expressPlayground({endpoint: '/graphql'}));
+    }
+
+    async setupGraphQlUsingApolloServerExpress(){
+        // Method 2 apollo-server-express
+        // Create an Apollo Server instance with your schema and resolvers
+        let server = new ApolloServerExpress({ schema: graphQlSchema, csrfPrevention:true, plugins:[
+            ApolloServerPluginLandingPageGraphQLPlayground(),
+            ApolloServerPluginLandingPageDisabled()
+        ], introspection: true, playground: true});
+
+        await server.start();
+        console.log(`GraphQL address: ${server.graphqlPath}`);
+
+        // Apply the Apollo Server middleware to Express
+        server.applyMiddleware({app});
+
+        // It uses @apollo/server/express4
+        // app.use('/graphql',cors(), express.json(),expressMiddleware(server));   
+
+        // setErrorHandlers must invoke after await server.start(), otherwise it makes problem in reach graphql route
+        // this.setErrorHandlers(app)
+    }
+
+    async setupGraphQlUsingApolloServerStandalone(){
+        // method 1 @apollo/server/standalone
+        let server = new ApolloServer({ schema: graphQlSchema,
+                        
+            csrfPrevention: true,
+            plugins:[
+            ApolloServerPluginLandingPageGraphQLPlayground(),
+            ApolloServerPluginLandingPageDisabled()],
+            instrospection: true,
+            playground: true
+        });
+
+        const {url} = await startStandaloneServer(server,{listen:{port:4000}})
+        console.log(`🚀 Server ready at ${url}`)
+
+        // setErrorHandlers must invoke after await server.start(), otherwise it makes problem in reach graphql route
+        // this.setErrorHandlers(app)
     }
 
     setupMongoDB(){
@@ -42,8 +143,8 @@ class Application{
         app.use('/api-doc',swaggerUi.serve,swaggerUi.setup(swaggerDocument))
     }
 
-    setRoutes(app){
-        app.use(routes)
+    async setRoutes(app){
+        app.use(routes);
     }
 
     setErrorHandlers(app){
@@ -78,4 +179,6 @@ class Application{
     })
 }
 
-module.exports = Application;
+module.exports = {
+    Application: new Application()
+};

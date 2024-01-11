@@ -1,6 +1,4 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const app = require('./app');
-
-new app();
+const {Application} = require('./app');
