@@ -1,0 +1,14 @@
+
+const optionTypeDefs = `
+    type Option {
+        title: String,
+        key: String,
+        type: String,
+        enum: [String],
+        required: Boolean,
+        guid: String,
+        category: Category
+    }
+`;
+
+module.exports = { optionTypeDefs };

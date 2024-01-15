@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.10.0",
+    "@apollo/subgraph": "^2.6.3",
     "apollo-server-core": "^3.13.0",
     "apollo-server-express": "^3.13.0",
     "auto-bind": "^3.0.0",
@@ -46,6 +47,7 @@
     "graphql": "^16.8.1",
     "graphql-http": "^1.22.0",
     "graphql-playground-middleware-express": "^1.7.23",
+    "graphql-type-json": "^0.3.2",
     "http-codes": "^1.0.0",
     "http-errors": "^2.0.0",
     "jalali-moment": "^3.3.11",

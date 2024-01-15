@@ -25,7 +25,13 @@ const {ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLanding
 const { createHandler } = require('graphql-http/lib/use/express');
 const expressPlayground = require('graphql-playground-middleware-express').default;
 
-const { graphQlSchema } = require('./src/graphql/index.resolver');
+// const { graphQlSchema } = require('./src/graphql/index.graphql');
+// const {typeDefs} = require('./src/graphql/method2/typeDefs/post.type');
+const {typeDefs} = require('./src/graphql/method2/typeDefs/index.type');
+// const {resolvers} = require('./src/graphql/method2/resolvers/post.resolver');
+const {resolvers} = require('./src/graphql/method2/resolvers/index.resolver');
+// const { graphQlSchemaM2 } = require('./src/graphql/method2/index.graphql.m2');
+
 const app = express();
 
 
@@ -40,7 +46,7 @@ class Application{
         this.setConfigs(app);
         this.setEJS(app);
         this.setRoutes(app);
-        // this.setupSwagger(app);  // Swagger makes the building slow
+        this.setupSwagger(app);  // Swagger makes the building slow
 
         // Initialize GraphQl and Error handling in this way to prevent conflict of them
         (async ()=>{
@@ -62,12 +68,18 @@ class Application{
         // Method 4 using @apollo/server
         // it has much in common with Apollo-server-express
         const server = new ApolloServer({
-            schema: graphQlSchema
+            // schema: graphQlSchemaM2,
+            typeDefs,
+            resolvers
         });
 
         await server.start()
         
-        app.use('/graphql', cors(), expressMiddleware(server));
+        app.use('/graphql', cors({origin:"*"}), expressMiddleware(server,{
+            context: ({req})=>{
+                return {req}
+            }
+        }));
 
         // Specify the path where we'd like to mount our server
         //highlight-start
