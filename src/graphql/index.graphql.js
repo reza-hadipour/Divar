@@ -1,35 +1,11 @@
-const { GraphQLObjectType, GraphQLSchema, GraphQLInt, GraphQLString, GraphQLList } = require('graphql');
-const { PostResolver } = require('./queries/post.resolver');
-const { CategoryResolver } = require('./queries/category.resolver');
-const { OptionResolver, OptionByCatIdResolver, OptionByCatSlug, OptionById } = require('./queries/option.resolver');
+const path = require('path');
 
-const RootQuery = new GraphQLObjectType({
-  name: 'RootQuery',
-  fields: {
-    posts: PostResolver,
-    categories: CategoryResolver,
-    options: OptionResolver,
-    optionById: OptionById,
-    optionByCatId: OptionByCatIdResolver,
-    optionByCatSlug: OptionByCatSlug
-  }
-});
+const { loadTypeDefs, loadResolvers } = require('../common/utils/functions');
 
-
-const RootMutation = new GraphQLObjectType({
-  name: 'RootMutation',
-  fields: {
-
-  }
-});
-
-
-const graphQlSchema = new GraphQLSchema({
-  query: RootQuery,
-  //   mutation: RootMutation
-});
-
+const typeDefs = loadTypeDefs(path.resolve(__dirname,'typeDefs'));
+const resolvers = loadResolvers(path.resolve(__dirname,'resolvers'));
 
 module.exports = {
-  graphQlSchema
-};
+  typeDefs,
+  resolvers
+}

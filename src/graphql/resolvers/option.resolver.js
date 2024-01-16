@@ -1,4 +1,4 @@
-const { CategoryModel } = require("../../../modules/category/category.model");
+const { CategoryModel } = require("../../modules/category/category.model");
 
 module.exports = {
         Option: {

@@ -25,7 +25,7 @@ const {ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLanding
 const { createHandler } = require('graphql-http/lib/use/express');
 const expressPlayground = require('graphql-playground-middleware-express').default;
 
-const {typeDefs,resolvers} = require('./src/graphql/method2/index.graphql.m2');
+const {typeDefs,resolvers} = require('./src/graphql/index.graphql');
 // const { graphQlSchema } = require('./src/graphql/index.graphql');
 // const {typeDefs} = require('./src/graphql/method2/typeDefs/post.type');
 // const {typeDefs} = require('./src/graphql/method2/typeDefs/index.type');

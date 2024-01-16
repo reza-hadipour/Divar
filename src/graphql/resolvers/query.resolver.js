@@ -1,7 +1,7 @@
-const { CategoryModel } = require("../../../modules/category/category.model");
-const { OptionModel } = require("../../../modules/option/option.model");
-const { PostModel } = require("../../../modules/post/post.model");
-const userModel = require("../../../modules/user/user.model");
+const { CategoryModel } = require("../../modules/category/category.model");
+const { OptionModel } = require("../../modules/option/option.model");
+const { PostModel } = require("../../modules/post/post.model");
+const userModel = require("../../modules/user/user.model");
 
 const {GraphQLJSON, GraphQLJSONObject} = require('graphql-type-json');
 
@@ -25,7 +25,3 @@ module.exports = {
             }
         }
 };
-
-// module.exports = {
-//     queryResolver
-// };

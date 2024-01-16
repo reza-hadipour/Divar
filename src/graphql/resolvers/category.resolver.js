@@ -1,4 +1,4 @@
-const { CategoryModel } = require("../../../modules/category/category.model");
+const { CategoryModel } = require("../../modules/category/category.model");
 
 module.exports = {
         Category: {
@@ -11,7 +11,3 @@ module.exports = {
         }
     
 };
-
-// module.exports = {
-//     categoryResolver
-// };

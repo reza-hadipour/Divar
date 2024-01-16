@@ -1,5 +1,5 @@
-const { CategoryModel } = require("../../../modules/category/category.model");
-const userModel = require("../../../modules/user/user.model");
+const { CategoryModel } = require("../../modules/category/category.model");
+const userModel = require("../../modules/user/user.model");
 
 module.exports = {
         Post: {
@@ -12,7 +12,3 @@ module.exports = {
         }
     
 };
-
-// module.exports = {
-//     postResolver
-// };
