@@ -1,7 +1,7 @@
 const { CategoryModel } = require("../../../modules/category/category.model");
 const userModel = require("../../../modules/user/user.model");
 
-const postResolver = {
+module.exports = {
         Post: {
             user: async (parent)=>{
                 return await userModel.findById(parent?.user);
@@ -13,6 +13,6 @@ const postResolver = {
     
 };
 
-module.exports = {
-    postResolver
-};
+// module.exports = {
+//     postResolver
+// };

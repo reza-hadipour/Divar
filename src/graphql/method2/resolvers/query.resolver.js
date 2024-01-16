@@ -3,7 +3,12 @@ const { OptionModel } = require("../../../modules/option/option.model");
 const { PostModel } = require("../../../modules/post/post.model");
 const userModel = require("../../../modules/user/user.model");
 
-const queryResolver = {
+const {GraphQLJSON, GraphQLJSONObject} = require('graphql-type-json');
+
+
+module.exports = {
+        JSON: GraphQLJSON,
+        JSONObject: GraphQLJSONObject,
         Query : {
             hello: ()=> "world",
             getPosts: async () => {
@@ -21,6 +26,6 @@ const queryResolver = {
         }
 };
 
-module.exports = {
-    queryResolver
-};
+// module.exports = {
+//     queryResolver
+// };

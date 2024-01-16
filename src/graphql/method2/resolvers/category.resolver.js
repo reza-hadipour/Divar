@@ -1,6 +1,6 @@
 const { CategoryModel } = require("../../../modules/category/category.model");
 
-const categoryResolver = {
+module.exports = {
         Category: {
             parent: async (parent)=>{
                 return await CategoryModel.findById(parent?.parent);
@@ -12,6 +12,6 @@ const categoryResolver = {
     
 };
 
-module.exports = {
-    categoryResolver
-};
+// module.exports = {
+//     categoryResolver
+// };

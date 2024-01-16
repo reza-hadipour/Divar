@@ -1,11 +1,4 @@
-// const { gql } = require('apollo-server-express');
-const { buildSchema } = require('graphql');
-
-const postTypeDefs = `
-    scalar JSONObject
-    scalar JSON
-
-    type Post {
+type Post {
         title: String,
         content: String,
         province: String,
@@ -20,6 +13,3 @@ const postTypeDefs = `
         category: Category,
         user: User
     }
-`;
-
-module.exports = { postTypeDefs };
