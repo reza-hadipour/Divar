@@ -1,0 +1,4 @@
+type Mutation {
+    createCategory (name: String!,slug: String, icon: String, parent: String): Category
+    updateCategory (id: String!, name: String, slug: String, icon: String, parent: String) : Category
+}

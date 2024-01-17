@@ -15,6 +15,42 @@ class CategoryService{
         this.#optionModel = OptionModel;
     }
 
+    async updateCategory(id,categoryDto){
+        const category = await this.checkExistById(id);
+        
+        if(categoryDto?.parent && isValidObjectId(categoryDto.parent)){
+
+            // Check new parent Id it exists?
+            const parentCategory = await this.checkExistById(categoryDto.parent);
+            categoryDto.parent = parentCategory._id;
+
+            // remove old parent from parents
+            category.parents.remove(category.parent);
+            
+            categoryDto.parents = [
+                ... new Set(([parentCategory._id.toString()].concat(
+                    category.parents.map(id => id.toString())
+                )).map(id => new Types.ObjectId(id))
+                )
+            ]
+        }
+
+        if(categoryDto?.slug){
+            categoryDto.slug = slugify(categoryDto.slug);
+            await this.alreadyExistBySlug(categoryDto.slug,id);
+        }else if( categoryDto?.name){
+            categoryDto.slug = slugify(categoryDto.name);
+            await this.alreadyExistBySlug(categoryDto.slug,id);
+        }
+        
+        category.set(categoryDto);
+        await category.save();
+        // console.log('categoryDto: ',categoryDto);
+        // return await this.#model.findByIdAndUpdate(id,categoryDto,{new : true});
+
+        return category;
+    }
+
     async creteCategory(categoryDto){
         if(categoryDto?.parent && isValidObjectId(categoryDto.parent)){
             const existCategory = await this.checkExistById(categoryDto.parent);
@@ -64,8 +100,8 @@ class CategoryService{
         return category;
     }
 
-    async alreadyExistBySlug(slug){
-        const category = await this.#model.findOne({slug});
+    async alreadyExistBySlug(slug,id= null){
+        const category = await this.#model.findOne({$and : [{slug}, {_id : {$ne : id}}]});
         if(category) throw new createHttpError.Conflict (CategoryMessage.alreadyExist)
         return category;
     }

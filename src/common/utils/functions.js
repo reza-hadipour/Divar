@@ -39,10 +39,10 @@ const loadResolvers = (folderPath) => {
             const nestedResolvers = loadResolvers(filePath);
             return { ...acc, ...nestedResolvers };
         }else if (stat.isFile() && file.endsWith('.resolver.js')){
-            const resolver = require(filePath);
+            const {rootResolver} = require(filePath);
             // console.log(filePath,acc);
             // console.log(filePath,resolver);
-            return {...acc, ...resolver}
+            return {...acc, ...rootResolver}
         } else {
             return acc
         }

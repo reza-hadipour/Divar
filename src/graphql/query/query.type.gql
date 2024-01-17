@@ -2,9 +2,12 @@
     scalar JSON
 
     type Query {
-        hello: String
         getPosts : [Post]
+        getPostById : Post
         getUsers : [User]
+        getUserById (id: String!): User
         getOptions : [Option]
+        getOptionById (id: String!) : Option
         getCategories: [Category]
+        getCategoryById (id: String!): Category
     }
