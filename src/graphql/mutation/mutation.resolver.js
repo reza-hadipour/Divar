@@ -1,10 +1,11 @@
-const { createCategory,updateCategory } = require("../category/category.resolver")
+const { createCategory,updateCategory,removeCategory  } = require("../category/category.resolver")
 
 
 const rootResolver = {
     Mutation: {
         createCategory,
-        updateCategory
+        updateCategory,
+        removeCategory
     }
 }
 

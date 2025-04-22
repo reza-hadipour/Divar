@@ -38,6 +38,19 @@ const getCategoryById = async(parent,args)=>{
     return category;
 }
 
+const removeCategory = async(parent,args)=>{
+    const {id} = args;
+    // get children
+    let cat = await service.checkExistById(id);
+    let children = cat.children;
+    console.log(children);
+    // remove children
+
+    return cat;
+    // remove parent
+    // return await service.removeCategory(id)
+}
+
 const getCategories= async()=>{
     return await CategoryModel.find({'parent': null});
 }
@@ -47,5 +60,6 @@ module.exports = {
     createCategory,
     getCategoryById,
     getCategories,
-    updateCategory
+    updateCategory,
+    removeCategory
 }

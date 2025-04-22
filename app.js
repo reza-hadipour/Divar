@@ -71,12 +71,15 @@ class Application{
         const server = new ApolloServer({
             // schema: graphQlSchemaM2,
             typeDefs,
-            resolvers
+            resolvers,
+            plugins: [
+                ApolloServerPluginLandingPageGraphQLPlayground
+            ]
         });
 
         await server.start()
         
-        app.use('/graphql', cors({origin:"*"}), expressMiddleware(server,{
+        app.use('/graphql',cors({origin:"*"}), expressMiddleware(server,{
             context: ({req})=>{
                 return {req}
             }
